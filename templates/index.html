@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management</title>
+    <style>
+        /* 设置背景图片 */
+        body {
+            background-image: url('/static/images/background.jpeg'); /* 替换为你的图片路径 */
+            background-size: cover;       /* 背景图片覆盖整个页面 */
+            background-repeat: no-repeat; /* 防止背景图片重复 */
+            background-attachment: fixed; /* 背景图片固定，不随滚动条滚动 */
+            color: #333;                  /* 设置默认文字颜色 */
+            font-family: Arial, sans-serif;
+        }
+
+        /* 表格样式 */
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 90%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        /* 表单样式 */
+        form {
+            margin: 20px auto;
+            width: 50%;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 10px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        form input, form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        h1 {
+            text-align: center; /* 设置水平居中 */
+        }
+
+        h2 {
+            text-align: center; /* 设置水平居中 */
+        }
+
+    </style>
+</head>
+<body>
+<h1>Library Management</h1>
+
+<div style="text-align: right;">
+    <a href="/user">{{.Nickname}}</a>
+    <span>({{.Gender}})</span>
+</div>
+
+<!-- 书籍表格 -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+        <th>Published Year</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .}}
+    <tr>
+        <td>{{.ID}}</td>
+        <td>{{.Title}}</td>
+        <td>{{.Author}}</td>
+        <td>{{.ISBN}}</td>
+        <td>{{.PublishedYear}}</td>
+        <td>{{.Status}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+
+<!-- 添加书籍 -->
+<h2>Add a Book</h2>
+<form action="/add" method="POST">
+    <label>Title: <input type="text" name="title" required></label>
+    <label>Author: <input type="text" name="author" required></label>
+    <label>ISBN: <input type="text" name="isbn" required></label>
+    <label>Published Year: <input type="number" name="publishedYear" required></label>
+    <button type="submit">Add Book</button>
+</form>
+</body>
+</html>
+
+<!-- 删除书籍 -->
+<h2>Delete a Book</h2>
+<form action="/delete" method="POST">
+    <label>Book ID: <input type="number" name="id" required></label><br>
+    <button type="submit">Delete Book</button>
+</form>
+
+<!-- 更新书籍信息 -->
+<h2>Update Book Information</h2>
+<form action="/update" method="POST">
+    <label>Book ID: <input type="number" name="id" required></label><br>
+    <label>Title: <input type="text" name="title" required></label><br>
+    <label>Author: <input type="text" name="author" required></label><br>
+    <label>ISBN: <input type="text" name="isbn" required></label><br>
+    <label>Published Year: <input type="number" name="publishedYear" required></label><br>
+    <label>Status:
+        <select name="status" required>
+            <option value="Available">Available</option>
+            <option value="Borrowed">Borrowed</option>
+        </select>
+    </label><br>
+    <button type="submit">Update Book</button>
+</form>
+</body>
+</html>
