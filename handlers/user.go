@@ -6,6 +6,31 @@ import (
 	"net/http"
 )
 
+func AddUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		// 获取表单数据
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		nickname := r.FormValue("nickname")
+		gender := r.FormValue("gender")
+
+		// 插入用户数据
+		_, err := db.DB.Exec("INSERT INTO users (username, password, nickname, gender) VALUES (?, ?, ?, ?)",
+			username, password, nickname, gender)
+		if err != nil {
+			http.Error(w, "Failed to add user", http.StatusInternalServerError)
+			return
+		}
+
+		// 添加成功后重定向到用户管理页面
+		http.Redirect(w, r, "/user", http.StatusSeeOther)
+	}
+
+	// 渲染添加用户的模板页面
+	tmpl := template.Must(template.ParseFiles("templates/add_user.html"))
+	tmpl.Execute(w, nil)
+}
+
 // User 页面显示用户信息，并提供修改功能
 func User(w http.ResponseWriter, r *http.Request) {
 	// 确保用户已登录（伪代码，需根据具体会话管理实现）

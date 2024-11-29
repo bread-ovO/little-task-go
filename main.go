@@ -3,7 +3,6 @@ package main
 import (
 	"little-task-go/db"       // 数据库初始化模块
 	"little-task-go/handlers" // 处理器模块
-	"log"
 	"net/http"
 )
 
@@ -19,11 +18,12 @@ func main() {
 	http.HandleFunc("/add", handlers.AddBook)       // 添加书籍
 	http.HandleFunc("/delete", handlers.DeleteBook) // 删除书籍
 	http.HandleFunc("/update", handlers.UpdateBook) // 更新书籍信息
-
-	// 静态文件处理
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.HandleFunc("/add_user", handlers.AddUser)  // 增加用户功能
 
 	// 启动服务器
-	log.Println("Server started at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	// 配置其他路由和服务
+	http.ListenAndServe(":8080", nil)
 }

@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Information</title>
 </head>
+
 <body>
-<h1>User Information</h1>
+    <h1>User Information</h1>
 
-<!-- 显示当前用户的昵称和性别 -->
-<p><strong>Nickname:</strong> {{.Nickname}}</p>
-<p><strong>Gender:</strong> {{.Gender}}</p>
+    <!-- 显示当前用户的昵称和性别 -->
+    <p><strong>Nickname:</strong> {{.Nickname}}</p>
+    <p><strong>Gender:</strong> {{.Gender}}</p>
 
-<!-- 用户信息修改表单 -->
-<form action="/user" method="POST">
-    <h2>Modify User Information</h2>
-    <label>New Nickname:
-        <input type="text" name="nickname" value="{{.Nickname}}" required>
-    </label>
-    <br><br>
-    <label>New Gender:
-        <select name="gender" required>
-            <option value="Male" {{if eq .Gender "Male"}}selected{{end}}>Male</option>
-            <option value="Female" {{if eq .Gender "Female"}}selected{{end}}>Female</option>
-        </select>
-    </label>
-    <br><br>
-    <label>New Password:
-        <input type="password" name="password" required>
-    </label>
-    <br><br>
-    <button type="submit">Update Information</button>
-</form>
+    <!-- 用户信息修改表单 -->
+    <form action="/user" method="POST">
+        <h2>Modify User Information</h2>
+        <label>New Nickname:
+            <input type="text" name="nickname" value="{{.Nickname}}" required>
+        </label>
+        <br><br>
+        <label>New Gender:
+            <select name="gender" required>
+                <option value="Male" {{if eq .Gender "Male" }}selected{{end}}>Male</option>
+                <option value="Female" {{if eq .Gender "Female" }}selected{{end}}>Female</option>
+            </select>
+        </label>
+        <br><br>
+        <label>New Password:
+            <input type="password" name="password" required>
+        </label>
+        <br><br>
+        <button type="submit">Update Information</button>
+    </form>
 
-<!-- 返回书籍管理页面 -->
-<a href="/books">Back to Books</a>
+    <!-- 返回书籍管理页面 -->
+    <a href="/books">Back to Books</a>
+    <!-- 跳转添加用户界面-->>
+    <a href="/add_user">Add New User</a>
 </body>
+
 </html>

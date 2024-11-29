@@ -19,8 +19,6 @@ func Init() {
 
 type Book struct {
 	ID          int
-	UserID      int
-	ISBN        string
 	Title       string
 	Author      string
 	Publisher   string

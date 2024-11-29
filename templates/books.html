@@ -1,32 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .toolbar .left-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            padding: 5px;
+            margin-right: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
+
 <body>
-<h1>Your Books</h1>
-<form action="/books" method="GET">
-    <input type="text" name="keyword" placeholder="Search books...">
-    <button type="submit">Search</button>
-</form>
-<table>
-    <tr>
-        <th>ISBN</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Publisher</th>
-        <th>Description</th>
-    </tr>
-    {{range .}}
-    <tr>
-        <td>{{.ISBN}}</td>
-        <td>{{.Title}}</td>
-        <td>{{.Author}}</td>
-        <td>{{.Publisher}}</td>
-        <td>{{.Description}}</td>
-    </tr>
-    {{end}}
-</table>
+    <h1>Books Management</h1>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="left-buttons">
+            <button id="addButton">Add</button>
+            <button id="editButton">Edit</button>
+            <button id="deleteButton">Delete</button>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchKeyword" placeholder="Search by title or description">
+            <button id="searchButton">Search</button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody id="bookList">
+            <!-- Placeholder for book rows -->
+        </tbody>
+    </table>
+
+    <!-- 引入外部 JavaScript 文件 -->
+    <script src="/static/js/books.js" defer></script>
 </body>
+
 </html>
