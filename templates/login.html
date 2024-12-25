@@ -1,19 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>登录</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .message p {
+            font-size: 14px;
+        }
+
+        .message p.error {
+            color: red;
+        }
+
+        .message p.success {
+            color: green;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .register-link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label>Username: <input type="text" name="username"></label><br>
-        <label>Password: <input type="password" name="password"></label><br>
-        <button type="submit">Login</button>
+<div class="container">
+    <h2>登录</h2>
+
+    <div class="message">
+        {{ if .error }}
+        <p class="error">{{ .error }}</p>
+        {{ end }}
+        {{ if .success }}
+        <p class="success">{{ .success }}</p>
+        {{ end }}
+    </div>
+
+    <form action="/login" method="post">
+        <label for="username">用户名:</label>
+        <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+
+        <label for="password">密码:</label>
+        <input type="password" id="password" name="password" placeholder="请输入密码" required>
+
+        <input type="submit" value="登录">
     </form>
-    <a href="/add_user">Add New User</a>
+
+    <div class="register-link">
+        <p>还没有账号？<a href="/register">注册</a></p>
+    </div>
+</div>
 </body>
 
 </html>

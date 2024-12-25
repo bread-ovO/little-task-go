@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div style="float: right;">
+        <a href="/login">已有账号？登录</a>
+    </div>
+    <h2>用户注册</h2>
+
+    <div style="width: 50%; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+        <form action="/register" method="post">
+            <div style="margin-bottom: 15px;">
+                <label for="username">用户名:</label><br>
+                <input type="text" id="username" name="username" required
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="password">密码:</label><br>
+                <input type="password" id="password" name="password" required
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="confirm_password">确认密码:</label><br>
+                <input type="password" id="confirm_password" name="confirm_password" required
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="gender">性别:</label><br>
+                <select id="gender" name="gender" required
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="Male">男</option>
+                    <option value="Female">女</option>
+                    <option value="Other">其他</option>
+                </select>
+            </div>
+
+            {{ if .error }}
+            <p style="color:red;">{{ .error }}</p>
+            {{ end }}
+            {{ if .success }}
+            <p style="color:green;">{{ .success }}</p>
+            {{ end }}
+
+            <div style="text-align: center;">
+                <input type="submit" value="注册"
+                    style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

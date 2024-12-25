@@ -1,86 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Books Management</title>
+    <title>书籍管理</title>
+    <link rel="stylesheet" href="/static/css/style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
         }
 
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .search {
+            text-align: right;
             margin-bottom: 20px;
-        }
-
-        .toolbar .left-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-box input {
-            padding: 5px;
-            margin-right: 5px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
 
-        table th,
-        table td {
+        table,
+        th,
+        td {
             border: 1px solid #ccc;
+        }
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
         }
 
-        table th {
-            background-color: #f4f4f4;
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .actions {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .actions button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .actions button:hover {
+            background-color: #45a049;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+
+        .pagination a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-    <h1>Books Management</h1>
-
-    <!-- Toolbar -->
-    <div class="toolbar">
-        <div class="left-buttons">
-            <button id="addButton">Add</button>
-            <button id="editButton">Edit</button>
-            <button id="deleteButton">Delete</button>
+    <div class="container">
+        <div style="float: right;">
+            <a href="/user/edit">
+                {{ if .nickname }}
+                {{ .nickname }}
+                {{ else }}
+                {{ .username }}
+                {{ end }}
+            </a> | 性别: {{ .gender }} | <a href="/logout">登出</a>
         </div>
-        <div class="search-box">
-            <input type="text" id="searchKeyword" placeholder="Search by title or description">
-            <button id="searchButton">Search</button>
+        <h2>书籍管理</h2>
+        <div class="search">
+            <form method="get" action="/books">
+                <input type="text" name="keyword" placeholder="搜索书名或简介" value="{{ .keyword }}">
+                <input type="submit" value="搜索">
+            </form>
+        </div>
+        <table>
+            <tr>
+                <th>选择</th>
+                <th>书号</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>出版社</th>
+                <th>简介</th>
+                <th>封面</th>
+            </tr>
+            {{ range .books }}
+            <tr>
+                <td><input type="checkbox" name="selected" value="{{ .ID }}"></td>
+                <td>{{ .BookNumber }}</td>
+                <td>{{ .Title }}</td>
+                <td>{{ .Author }}</td>
+                <td>{{ .Publisher }}</td>
+                <td>{{ .Description }}</td>
+                <td><img src="/static/{{ .CoverImage }}" alt="封面" width="50"></td>
+            </tr>
+            {{ end }}
+        </table>
+        <div class="actions">
+            <button onclick="showAddForm()">添加</button>
+            <button onclick="showUpdateForm()">修改</button>
+            <button onclick="deleteSelected()">删除</button>
+        </div>
+        <div class="pagination">
+            <span>页数: {{ .currentPage }} / {{ .totalPages }}</span>
+            {{ if gt .currentPage 1 }}
+            <a href="/books?page={{ sub .currentPage 1 }}&keyword={{ .keyword }}">上一页</a>
+            {{ end }}
+            {{ if lt .currentPage .totalPages }}
+            <a href="/books?page={{ add .currentPage 1 }}&keyword={{ .keyword }}">下一页</a>
+            {{ end }}
         </div>
     </div>
-
-    <!-- Table -->
-    <table>
-        <thead>
-            <tr>
-                <th>Select</th>
-                <th>ISBN</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Publisher</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody id="bookList">
-            <!-- Placeholder for book rows -->
-        </tbody>
-    </table>
-
-    <!-- 引入外部 JavaScript 文件 -->
-    <script src="/static/js/books.js" defer></script>
+    <script>
+        function showAddForm() {
+            window.location.href = "/books/add";
+        }
+        function showUpdateForm() {
+            const selected = document.querySelector('input[name="selected"]:checked');
+            if (selected) {
+                const bookID = selected.value;
+                window.location.href = `/books/update/${bookID}`;
+            } else {
+                alert("请选择要修改的书籍");
+            }
+        }
+        function deleteSelected() {
+            const selected = document.querySelector('input[name="selected"]:checked');
+            if (selected) {
+                const bookID = selected.value;
+                if (confirm("确定要删除这本书吗？")) {
+                    window.location.href = `/books/delete/${bookID}`;
+                }
+            } else {
+                alert("请选择要删除的书籍");
+            }
+        }
+    </script>
 </body>
 
 </html>

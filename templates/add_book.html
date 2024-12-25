@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>添加书籍</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 50%;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    input[type="file"] {
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h2>添加书籍</h2>
+  <form method="post" action="/books/add" enctype="multipart/form-data">
+    <label for="book_number">书号</label>
+    <input type="text" id="book_number" name="book_number" required>
+
+    <label for="title">书名</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="author">作者</label>
+    <input type="text" id="author" name="author" required>
+
+    <label for="publisher">出版社</label>
+    <input type="text" id="publisher" name="publisher" required>
+
+    <label for="description">简介</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+
+    <label for="cover_image">封面图片</label>
+    <input type="file" id="cover_image" name="cover_image" accept="image/*" required>
+
+    <button type="submit">提交</button>
+  </form>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>编辑用户信息</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #strength {
+            font-size: 12px;
+            margin-top: -10px;
+            color: gray;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .message.success {
+            color: green;
+        }
+
+        .message.error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>编辑用户信息</h2>
+        <!-- 提示信息 -->
+        {{ if .message }}
+        <p class="message {{ if eq .status " success" }}success{{ else }}error{{ end }}">
+            {{ .message }}
+        </p>
+        {{ end }}
+        <form method="post" action="/user/edit">
+            <label for="nickname">昵称:</label>
+            <input type="text" id="nickname" name="nickname" value="{{ .nickname }}" required minlength="3"
+                maxlength="20">
+
+            <label for="gender">性别:</label>
+            <select id="gender" name="gender">
+                <option value="男" {{ if eq .gender "男" }}selected{{ end }}>男</option>
+                <option value="女" {{ if eq .gender "女" }}selected{{ end }}>女</option>
+                <option value="其他" {{ if eq .gender "其他" }}selected{{ end }}>其他</option>
+            </select>
+
+            <label for="password">新密码:</label>
+            <input type="password" id="password" name="password" minlength="6">
+            <p id="strength">密码强度：弱</p>
+
+            <button type="submit" onclick="this.disabled=true; this.form.submit();">保存</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('password').addEventListener('input', function () {
+            const strength = document.getElementById('strength');
+            const value = this.value;
+            if (value.length < 6) {
+                strength.textContent = "密码强度：弱";
+                strength.style.color = "red";
+            } else if (value.length < 10) {
+                strength.textContent = "密码强度：中";
+                strength.style.color = "orange";
+            } else {
+                strength.textContent = "密码强度：强";
+                strength.style.color = "green";
+            }
+        });
+    </script>
+    </div>
+</body>
+
+</html>
