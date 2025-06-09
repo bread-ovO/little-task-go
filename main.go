@@ -18,6 +18,9 @@ func main() {
 	database.InitDB()
 	defer database.DB.Close()
 
+	// In main.go or database.InitDB()
+	database.DB.AutoMigrate(&models.User{}, &models.Book{}, &models.BorrowingRecord{}, &models.ReservationRecord{}) // 添加 ReservationRecord
+
 	// 创建 Gin 实例
 	router := gin.Default()
 
@@ -85,14 +88,19 @@ func main() {
 	{
 		// 书籍管理
 		authGroup.GET("/books", controllers.ShowBooksPage)
-
 		authGroup.GET("/books/add", controllers.ShowAddBookPage)
 		authGroup.POST("/books/add", controllers.AddBook)
-
 		authGroup.GET("/books/update/:id", controllers.ShowUpdateBookPage)
 		authGroup.POST("/books/update/:id", controllers.UpdateBookHandler)
-
 		authGroup.GET("/books/delete/:id", controllers.DeleteBookHandler)
+
+		// 借阅与归还 (新添加)
+		authGroup.GET("/books/borrow/:id", controllers.BorrowBook)   // 使用 GET 简化示例，POST 更佳
+		authGroup.GET("/books/return/:id", controllers.ReturnBook)   // 使用 GET 简化示例，POST 更佳
+		authGroup.GET("/history", controllers.ShowBorrowingHistory)  // (可选)
+		authGroup.GET("/books/reserve/:id", controllers.ReserveBook) // 新增
+		authGroup.GET("/books/renew/:id", controllers.RenewBook)     // 新增
+		authGroup.GET("/myborrows", controllers.ShowMyBorrowsPage)   // 新增
 
 		// 用户管理
 		authGroup.GET("/user/edit", controllers.ShowUserEditPage)

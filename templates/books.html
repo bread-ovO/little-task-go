@@ -86,89 +86,101 @@
         .pagination a:hover {
             text-decoration: underline;
         }
+        .actions-cell a, .actions-cell button { /* 调整按钮样式 */
+            display: inline-block;
+            margin: 2px;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-borrow { background-color: #5cb85c; }
+        .btn-borrow:hover { background-color: #4cae4c; }
+        .btn-reserve { background-color: #f0ad4e; }
+        .btn-reserve:hover { background-color: #eea236; }
+        .btn-borrowed { background-color: #d9534f; cursor: not-allowed; }
+        .btn-reserved { background-color: #5bc0de; cursor: not-allowed; }
+
+        .user-info { float: right; margin-bottom: 10px; }
+        .main-actions { margin-top: 20px; text-align: left; }
+        .main-actions button, .main-actions a {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .main-actions a { background-color: #007bff; }
+        .main-actions a:hover { background-color: #0056b3; }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div style="float: right;">
-            <a href="/user/edit">
-                {{ if .nickname }}
-                {{ .nickname }}
-                {{ else }}
-                {{ .username }}
-                {{ end }}
-            </a> | 性别: {{ .gender }} | <a href="/logout">登出</a>
-        </div>
-        <h2>书籍管理</h2>
-        <div class="search">
-            <form method="get" action="/books">
-                <input type="text" name="keyword" placeholder="搜索书名或简介" value="{{ .keyword }}">
-                <input type="submit" value="搜索">
-            </form>
-        </div>
-        <table>
-            <tr>
-                <th>选择</th>
-                <th>书号</th>
-                <th>书名</th>
-                <th>作者</th>
-                <th>出版社</th>
-                <th>简介</th>
-                <th>封面</th>
-            </tr>
-            {{ range .books }}
-            <tr>
-                <td><input type="checkbox" name="selected" value="{{ .ID }}"></td>
-                <td>{{ .BookNumber }}</td>
-                <td>{{ .Title }}</td>
-                <td>{{ .Author }}</td>
-                <td>{{ .Publisher }}</td>
-                <td>{{ .Description }}</td>
-                <td><img src="/static/{{ .CoverImage }}" alt="封面" width="50"></td>
-            </tr>
-            {{ end }}
-        </table>
-        <div class="actions">
-            <button onclick="showAddForm()">添加</button>
-            <button onclick="showUpdateForm()">修改</button>
-            <button onclick="deleteSelected()">删除</button>
-        </div>
-        <div class="pagination">
-            <span>页数: {{ .currentPage }} / {{ .totalPages }}</span>
-            {{ if gt .currentPage 1 }}
-            <a href="/books?page={{ sub .currentPage 1 }}&keyword={{ .keyword }}">上一页</a>
-            {{ end }}
-            {{ if lt .currentPage .totalPages }}
-            <a href="/books?page={{ add .currentPage 1 }}&keyword={{ .keyword }}">下一页</a>
-            {{ end }}
-        </div>
+<div class="container">
+    <div class="user-info"> <a href="/user/edit">
+        {{ if .nickname }}{{ .nickname }}{{ else }}{{ .username }}{{ end }}
+    </a> | 性别: {{ .gender }} | <a href="/myborrows">我的借阅</a> | <a href="/logout">登出</a>
     </div>
-    <script>
-        function showAddForm() {
-            window.location.href = "/books/add";
-        }
-        function showUpdateForm() {
-            const selected = document.querySelector('input[name="selected"]:checked');
-            if (selected) {
-                const bookID = selected.value;
-                window.location.href = `/books/update/${bookID}`;
-            } else {
-                alert("请选择要修改的书籍");
-            }
-        }
-        function deleteSelected() {
-            const selected = document.querySelector('input[name="selected"]:checked');
-            if (selected) {
-                const bookID = selected.value;
-                if (confirm("确定要删除这本书吗？")) {
-                    window.location.href = `/books/delete/${bookID}`;
-                }
-            } else {
-                alert("请选择要删除的书籍");
-            }
-        }
-    </script>
+    <h2>书籍管理</h2>
+    <div class="search">
+        <form method="get" action="/books">
+            <input type="text" name="keyword" placeholder="搜索..." value="{{ .keyword }}">
+            <input type="submit" value="搜索">
+        </form>
+    </div>
+    <table>
+        <tr>
+            <th>书号</th>
+            <th>书名</th>
+            <th>作者</th>
+            <th>出版社</th>
+            <th>封面</th>
+            <th>状态</th> <th>操作</th> </tr>
+        {{ range .books }}
+        <tr>
+            <td>{{ .BookNumber }}</td>
+            <td>{{ .Title }}</td>
+            <td>{{ .Author }}</td>
+            <td>{{ .Publisher }}</td>
+            <td><img src="/{{ .CoverImage }}" alt="封面" width="50"></td> <td>{{ .Status }}</td>
+            <td class="actions-cell">
+                {{ if eq .Status "Available" }}
+                <a href="/books/borrow/{{ .ID }}" class="btn-borrow">借阅</a>
+                {{ else if eq .Status "Borrowed" }}
+                {{ $isBorrowedByMe := false }}
+                {{ range $.borrowedIDs }}
+                {{ if eq . $.ID }} {{ $isBorrowedByMe = true }} {{ end }}
+                {{ end }}
+                {{ if $isBorrowedByMe }}
+                <a href="/books/return/{{ .ID }}" class="btn-borrowed" style="background-color: #337ab7;">归还</a>
+                {{ else }}
+                <a href="/books/reserve/{{ .ID }}" class="btn-reserve">预定</a>
+                {{ end }}
+                {{ else if eq .Status "Reserved" }}
+                <button class="btn-reserved" disabled>已预定</button>
+                {{ end }}
+                <a href="/books/update/{{ .ID }}" style="background-color: #777;">修改</a>
+            </td>
+        </tr>
+        {{ end }}
+    </table>
+    <div class="main-actions"> <button onclick="window.location.href='/books/add'">添加书籍</button>
+    </div>
+    <div class="pagination">
+        <span>页数: {{ .currentPage }} / {{ .totalPages }}</span>
+        {{ if gt .currentPage 1 }}
+        <a href="/books?page={{ sub .currentPage 1 }}&keyword={{ .keyword }}">上一页</a>
+        {{ end }}
+        {{ if lt .currentPage .totalPages }}
+        <a href="/books?page={{ add .currentPage 1 }}&keyword={{ .keyword }}">下一页</a>
+        {{ end }}
+    </div>
+</div>
 </body>
-
 </html>

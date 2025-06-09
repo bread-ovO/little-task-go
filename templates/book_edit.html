@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>编辑书籍</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        img.current-cover {
+            max-width: 150px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>编辑书籍</h2>
+    <form method="post" action="/books/update/{{ .Book.ID }}" enctype="multipart/form-data">
+        <label for="book_number">书号</label>
+        <input type="text" id="book_number" name="book_number" value="{{ .Book.BookNumber }}" required>
+
+        <label for="title">书名</label>
+        <input type="text" id="title" name="title" value="{{ .Book.Title }}" required>
+
+        <label for="author">作者</label>
+        <input type="text" id="author" name="author" value="{{ .Book.Author }}" required>
+
+        <label for="publisher">出版社</label>
+        <input type="text" id="publisher" name="publisher" value="{{ .Book.Publisher }}" required>
+
+        <label for="description">简介</label>
+        <textarea id="description" name="description" rows="4" required>{{ .Book.Description }}</textarea>
+
+        <label for="cover_image">封面图片</label>
+        <p>当前封面:</p>
+        <img src="/{{ .Book.CoverImage }}" alt="当前封面" class="current-cover">
+        <p style="font-size: 12px; color: grey;">上传新图片以替换封面，留空则不修改。</p>
+        <input type="file" id="cover_image" name="cover_image" accept="image/*">
+
+        <button type="submit">保存更改</button>
+    </form>
+    <a href="/books" class="back-link">返回书籍列表</a>
+</div>
+</body>
+
+</html>
